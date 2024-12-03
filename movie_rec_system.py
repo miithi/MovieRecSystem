@@ -118,7 +118,10 @@ def recommend(movie):
     for i in recommended_movies:
         print(movies_dataFrame.iloc[i[0]].title)
 
-
-recommend('Inside Out')
-
+#testing
+test_movies = ["Inside Out", "Avatar", "A Christmas Carol", "Inception", "The Dark Knight"]
+for movie in test_movies:
+    print("\n" + "Recommendations based on: " + movie + "\n")
+    recommend(movie)
+    print("\n" + "=" * 50 + "\n")
 # %%
