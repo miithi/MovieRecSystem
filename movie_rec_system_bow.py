@@ -18,6 +18,8 @@ movies = movies[['movie_id', 'title', 'overview', 'genres', 'keywords' , 'cast',
 
 #preprocessing
 movies.isnull().sum()
+
+#Dropping missing values
 movies.dropna(inplace=True)
 
 #dulplicate checker
@@ -26,14 +28,12 @@ movies.dropna(inplace=True)
 #checking for info before merging
 #movies.iloc[0].genres
 
+#Helper functions for data preprocessing
 def convert(obj):
     list = []
     for i in ast.literal_eval(obj):
         list.append(i['name'])
     return list
-
-movies['genres'] = movies['genres'].apply(convert)
-movies['keywords'] = movies['keywords'].apply(convert)
 
 def convert_three(obj):
     list = []
@@ -46,8 +46,6 @@ def convert_three(obj):
             break
     return list
 
-movies['cast'] = movies['cast'].apply(convert_three)
-
 def fetch_director(obj):
     list = []
     for i in ast.literal_eval(obj):
@@ -56,8 +54,11 @@ def fetch_director(obj):
             break
     return list
 
+#applying preprocessing
+movies['genres'] = movies['genres'].apply(convert)
+movies['keywords'] = movies['keywords'].apply(convert)
+movies['cast'] = movies['cast'].apply(convert_three)
 movies['crew'] = movies['crew'].apply(fetch_director)
-
 #just because I am going to concatenate the lists later
 # I need a list for overview as well
 movies['overview'] = movies['overview'].apply(lambda x:x.split())
@@ -86,7 +87,7 @@ movies_dataFrame['tags'] = movies_dataFrame['tags'].apply(lambda x: x.lower())
 
 
 
-#Text Vectorization
+#Text Vectorization uisng Bag of Words
 #max numbers of top words = 5000
 ps = PorterStemmer()
 
@@ -98,7 +99,7 @@ def stem(text):
     return " ".join(list)
 
 movies_dataFrame['tags'] = movies_dataFrame['tags'].apply(stem)
-movies_dataFrame['tags'][0]
+#movies_dataFrame['tags'][0]
 
 #removing english stop words like is, a, are 
 cv = CountVectorizer(max_features=5000, stop_words='english') 
