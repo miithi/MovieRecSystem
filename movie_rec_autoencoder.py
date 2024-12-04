@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 
 # Load preprocessed dataset (using the same preprocessing as in BoW)
-from movie_rec_system_bow import movies_dataFrame, recommend  # reusing preprocessing
+from movie_rec_system_bow import movies_dataFrame  # reusing preprocessing
 
 # Text vectorization
 cv = CountVectorizer(max_features=5000, stop_words='english')
@@ -37,11 +37,42 @@ compressed_vectors = encoder_model.predict(vectors)
 
 
 # Compute cosine similarity on latent space
-similarity = cosine_similarity(compressed_vectors)
+similarity_cosine = cosine_similarity(compressed_vectors)
+similarity_euclidean = euclidean_distances(compressed_vectors)
 
-# Recommendation function
-recommend("Avatar")
+def recommendCosine(movie):
+    if movie not in movies_dataFrame['title'].values:
+        print(f"Movie '{movie}' not found in the dataset.")
+        return
+    
+    movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
+    distances = similarity_cosine[movie_index]
+    recommended_movies = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
+    for i in recommended_movies:
+        print(movies_dataFrame.iloc[i[0]].title)
 
+def recommendEuclidean(movie):
+    if movie not in movies_dataFrame['title'].values:
+        print(f"Movie '{movie}' not found in the dataset.")
+        return
+    
+    movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
+    distances = similarity_euclidean[movie_index]
+    recommended_movies = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
+    for i in recommended_movies:
+        print(movies_dataFrame.iloc[i[0]].title)
+
+
+print("Top recommendations based on cosine similarity:", similarity_cosine[0][:5])
+print("Top recommendations based on Euclidean distance:", similarity_euclidean[0][:5])
+
+test_movies = ["Avatar"]
+for movie in test_movies:
+    print("\n" + "Recommendations based on: " + movie + "\n")
+    recommendCosine(movie)
+    print("\n" + "=" * 50 + "\n")
+    recommendEuclidean(movie)
+    print("\n" + "=" * 50 + "\n")
 
 # %%
 # Epoch: Represents how many times the model has seen the entire dataset.
