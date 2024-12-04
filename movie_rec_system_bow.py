@@ -112,6 +112,10 @@ similarity = cosine_similarity(vectors)
 
 #Recommender function
 def recommend(movie):
+    if movie not in movies_dataFrame['title'].values:
+        print(f"Movie '{movie}' not found in the dataset.")
+        return
+    
     movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
     distances = similarity[movie_index]
     recommended_movies = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
@@ -119,7 +123,7 @@ def recommend(movie):
         print(movies_dataFrame.iloc[i[0]].title)
 
 #testing
-test_movies = ["Inside Out", "Avatar", "A Christmas Carol", "Inception", "The Dark Knight"]
+test_movies = ["Avatar"]
 for movie in test_movies:
     print("\n" + "Recommendations based on: " + movie + "\n")
     recommend(movie)
