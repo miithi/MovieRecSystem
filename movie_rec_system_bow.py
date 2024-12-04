@@ -109,7 +109,6 @@ vectors = cv.fit_transform(movies_dataFrame['tags']).toarray()
 similarity = cosine_similarity(vectors)
 #similarity[1]
 
-
 #Recommender function
 def recommend(movie):
     movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
