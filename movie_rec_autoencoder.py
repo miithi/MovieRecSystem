@@ -37,8 +37,8 @@ compressed_vectors = encoder_model.predict(vectors)
 
 
 # Compute cosine similarity on latent space
-similarity_cosine = cosine_similarity(compressed_vectors)
-similarity_euclidean = euclidean_distances(compressed_vectors)
+similarity_cos = cosine_similarity(compressed_vectors)
+similarity_euc = euclidean_distances(compressed_vectors)
 
 def recommendCosine(movie):
     if movie not in movies_dataFrame['title'].values:
@@ -46,7 +46,7 @@ def recommendCosine(movie):
         return
     
     movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
-    distances = similarity_cosine[movie_index]
+    distances = similarity_cos[movie_index]
     recommended_movies = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
     for i in recommended_movies:
         print(movies_dataFrame.iloc[i[0]].title)
@@ -57,14 +57,14 @@ def recommendEuclidean(movie):
         return
     
     movie_index = movies_dataFrame[movies_dataFrame['title'] == movie].index[0]
-    distances = similarity_euclidean[movie_index]
+    distances = similarity_euc[movie_index]
     recommended_movies = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
     for i in recommended_movies:
         print(movies_dataFrame.iloc[i[0]].title)
 
 
-print("Top recommendations based on cosine similarity:", similarity_cosine[0][:5])
-print("Top recommendations based on Euclidean distance:", similarity_euclidean[0][:5])
+print("Top recommendations based on cosine similarity:", similarity_cos[0][:5])
+print("Top recommendations based on Euclidean distance:", similarity_euc[0][:5])
 
 test_movies = ["Avatar"]
 for movie in test_movies:

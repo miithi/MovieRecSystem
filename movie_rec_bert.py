@@ -22,6 +22,6 @@ similarity = cosine_similarity(embeddings)
 
 # Recommendation function
 
-recommend("Avatar")
+#recommend("Avatar")
 
 # %%
